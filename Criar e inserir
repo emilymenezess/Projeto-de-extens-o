@@ -1,0 +1,41 @@
+import sqlite3
+con = sqlite3.connect('banco.db')
+cursor = con.cursor()
+
+listaDados = [('Emily', 21, '00000000000', 'emily@gmail.com', '81-99999-9999', 'Recife', 'PE', '2024-07-08'),
+                ('Bruna', 20, '11111111111', 'bruna@gmail.com', '81-88888-9999', 'Recife', 'PE', '2024-07-09'),
+                ('Joao', 22, '22222222222', 'joao@gmail.com', '81-99999-7777', 'Recife', 'PE', '2024-07-10')]
+
+# Cria uma tabela
+cursor.execute("""
+CREATE TABLE clientes (
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        idade INTEGER,
+        cpf VARCHAR(11) NOT NULL,
+        email TEXT NOT NULL,
+        fone TEXT,
+        cidade TEXT,
+        uf VARCHAR(2) NOT NULL,
+        criado DATE NOT NULL
+);
+""")
+
+# Insere valores a uma tabela
+cursor.execute("""
+INSERT INTO clientes(nome, idade, cpf, email, fone, cidade, uf, criado)
+VALUES('Emily', 21, '00000000000', 'emily@gmail.com', '81-99999-9999', 'Recife', 'PE', '2024-07-08')
+""")
+
+# Insere valores a uma tabela usando uma lista
+cursor.executemany("""
+INSERT INTO clientes(nome, idade, cpf, email, fone, cidade, uf, criado)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?)""", listaDados)
+
+# Faz o commit no banco
+con.commit()
+print('Dados inseridos com sucesso.')
+
+# Fecha conexao com o banco
+#print("Tabela criada com sucesso!")
+con.close()
